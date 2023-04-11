@@ -2,6 +2,7 @@ package com.lwz.hospitalsystem.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lwz.hospitalsystem.common.R;
 import com.lwz.hospitalsystem.dto.OperationDto;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -77,10 +79,12 @@ public class OperationController {
     }
 
     @PutMapping("/endoperation")
-    public R<String> endOperation(int patientid,int roomid){
-        LambdaUpdateWrapper<Operation> updateWrapper=new LambdaUpdateWrapper<>();
-        updateWrapper.eq(Operation::getPatientid,patientid);
-        updateWrapper.set(Operation::getOuttime,LocalDateTime.now());
+    public R<String> endOperation(Map map){
+        Integer patientid = (Integer) map.get("patientid");
+        Integer roomid = (Integer) map.get("roomid");
+        UpdateWrapper<Operation> updateWrapper=new UpdateWrapper<>();
+        updateWrapper.eq("patientid",patientid);
+        updateWrapper.set("outtime",LocalDateTime.now());
         operationService.update(null,updateWrapper);
         LambdaUpdateWrapper<OperationRoom> updateWrapper1=new LambdaUpdateWrapper<>();
         updateWrapper1.set(OperationRoom::getStatus,0);
