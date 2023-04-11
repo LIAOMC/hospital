@@ -2,16 +2,19 @@ package com.lwz.hospitalsystem.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lwz.hospitalsystem.common.R;
 import com.lwz.hospitalsystem.dto.PatientDto;
 import com.lwz.hospitalsystem.entity.Doctor;
+import com.lwz.hospitalsystem.entity.Operation;
 import com.lwz.hospitalsystem.entity.Patient;
 import com.lwz.hospitalsystem.entity.Sickroom;
 import com.lwz.hospitalsystem.service.DoctorService;
 import com.lwz.hospitalsystem.service.PatientService;
 import com.lwz.hospitalsystem.service.SickroomService;
 import com.lwz.hospitalsystem.utils.LoginToken;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,12 +82,12 @@ public class PatientController {
         return R.success("修改成功！");
     }
 
-    @PostMapping("/{id}")
+    @GetMapping
     @LoginToken
-    public R<String> outPatient(@PathVariable int id){
-        LambdaUpdateWrapper<Patient> updateWrapper=new LambdaUpdateWrapper<>();
-        updateWrapper.set(Patient::getOuttime, LocalDateTime.now());
-        updateWrapper.eq(Patient::getId,id);
+    public R<String> outPatient(int id){
+        UpdateWrapper<Patient> updateWrapper=new UpdateWrapper<>();
+        updateWrapper.set("outtime", LocalDateTime.now());
+        updateWrapper.eq("id",id);
         patientService.update(null,updateWrapper);
         return R.success("办理出院成功!");
     }
@@ -106,6 +109,8 @@ public class PatientController {
         int count = patientService.count(queryWrapper);
         return R.success(count);
     }
+
+
 
 
 }

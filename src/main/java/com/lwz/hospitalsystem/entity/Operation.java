@@ -20,4 +20,5 @@ public class Operation {
     private int patientid;              //病人ID
     private int oroomid;                //手术室编号
     private String doctor;              //主治医生
+    private LocalDateTime outtime;      //结束手术时间
 }

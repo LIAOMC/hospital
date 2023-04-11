@@ -71,15 +71,23 @@ public class OperationController {
         updateWrapper.set(OperationRoom::getStatus,1);
         updateWrapper.eq(OperationRoom::getRoomid,operation.getOroomid());
         operationRoomService.update(updateWrapper);
+        operation.setDatetime(LocalDateTime.now());
         operationService.save(operation);
         return R.success("添加手术信息成功！");
     }
 
-//    @PostMapping
-//    @LoginToken
-//    public R<String> outOperation(){
-//        return null;
-//    }
+    @PutMapping("/endoperation")
+    public R<String> endOperation(int patientid,int roomid){
+        LambdaUpdateWrapper<Operation> updateWrapper=new LambdaUpdateWrapper<>();
+        updateWrapper.eq(Operation::getPatientid,patientid);
+        updateWrapper.set(Operation::getOuttime,LocalDateTime.now());
+        operationService.update(null,updateWrapper);
+        LambdaUpdateWrapper<OperationRoom> updateWrapper1=new LambdaUpdateWrapper<>();
+        updateWrapper1.set(OperationRoom::getStatus,0);
+        updateWrapper1.eq(OperationRoom::getRoomid,roomid);
+        operationRoomService.update(null,updateWrapper1);
+        return R.success("办理结束手术成功！");
+    }
 
     @GetMapping("/people")
     @LoginToken
