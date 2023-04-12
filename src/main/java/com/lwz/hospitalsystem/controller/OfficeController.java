@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @Slf4j
 @RequestMapping("/office")
@@ -31,6 +33,12 @@ public class OfficeController {
         }
         officeService.page(pageInfo, queryWrapper);
         return R.success(pageInfo);
+    }
+
+    @GetMapping("/list")
+    public R<List> getAllOffice(){
+        List<Office> list = officeService.list();
+        return R.success(list);
     }
 
 

@@ -79,7 +79,7 @@ public class OperationController {
     }
 
     @PutMapping("/endoperation")
-    public R<String> endOperation(Map map){
+    public R<String> endOperation(@RequestBody Map map){
         Integer patientid = (Integer) map.get("patientid");
         Integer roomid = (Integer) map.get("roomid");
         UpdateWrapper<Operation> updateWrapper=new UpdateWrapper<>();
@@ -106,6 +106,7 @@ public class OperationController {
     }
 
     @GetMapping("/list")
+    @CrossOrigin
     public R<List> getAllOperation(){
         List<OperationRoom> list = operationRoomService.list();
         return R.success(list);
