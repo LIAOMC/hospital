@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Doctor {
-
+    @TableId(type = IdType.AUTO)
     private int id;         //编号
     private String name;    //医生名字
     private String sex;     //性别
