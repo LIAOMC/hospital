@@ -62,12 +62,8 @@ public class NurseController {
     @PostMapping
     @LoginToken
     public R<String> addDoctor(@RequestBody NurseDto nurseDto) {
-        LambdaQueryWrapper<Office> queryWrapper=new LambdaQueryWrapper<>();
-        queryWrapper.eq(Office::getName,nurseDto.getOffice());
-        Office office = officeService.getOne(queryWrapper);
         Nurse nurse=new Nurse();
         BeanUtils.copyProperties(nurseDto,nurse);
-        nurse.setOfficeid(office.getId());
         nurseService.save(nurse);
         return R.success("添加护士成功！");
     }

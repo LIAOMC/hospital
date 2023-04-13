@@ -19,7 +19,9 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorMapper, Doctor> impleme
 
     @Override
     public void updateDoctor(DoctorDto doctorDto) {
-        Office office = officeService.getById(doctorDto.getOfficeid());
+        LambdaQueryWrapper<Office> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.eq(Office::getName,doctorDto.getOffice());
+        Office office = officeService.getOne(queryWrapper);
         Doctor doctor = new Doctor();
         BeanUtils.copyProperties(doctorDto, doctor);
         doctor.setOfficeid(office.getId());

@@ -20,7 +20,9 @@ public class NurseServiceImpl extends ServiceImpl<NurseMapper, Nurse> implements
 
     @Override
     public void updateNurse(NurseDto nurseDto) {
-        Office office = officeService.getById(nurseDto.getOfficeid());
+        LambdaQueryWrapper<Office> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.eq(Office::getName,nurseDto.getOffice());
+        Office office = officeService.getOne(queryWrapper);
         Nurse nurse = new Nurse();
         BeanUtils.copyProperties(nurseDto, nurse);
         nurse.setOfficeid(office.getId());
