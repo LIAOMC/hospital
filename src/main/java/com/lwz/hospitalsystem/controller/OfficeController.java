@@ -36,11 +36,12 @@ public class OfficeController {
     }
 
     @GetMapping("/list")
-    public R<List> getAllOffice(){
-        List<Office> list = officeService.list();
+    public R<List> getOffice(int officekind){
+        LambdaQueryWrapper<Office> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.eq(Office::getOfficekind,officekind);
+        List<Office> list = officeService.list(queryWrapper);
         return R.success(list);
     }
-
 
 
 }

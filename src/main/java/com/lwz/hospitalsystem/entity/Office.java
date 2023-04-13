@@ -15,5 +15,6 @@ public class Office {
     private String officedoctor;    //科室主任
     private int sickroomnum;        //科室病房数量
     private String officeinfo;      //科室信息
+    private int officekind;         //科室类别
 
 }
