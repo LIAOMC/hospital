@@ -16,6 +16,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -106,7 +107,7 @@ public class UserController {
         }
     }
 
-    @DeleteMapping
+    @DeleteMapping("/delete")
     @LoginToken
     public R<String> deleteUser(int id){
         userService.removeById(id);
@@ -116,7 +117,10 @@ public class UserController {
     @PostMapping("/add")
     @LoginToken
     public R<String> addUser(@RequestBody User user){
+        user.setTime(LocalDateTime.now());
         userService.save(user);
         return R.success("添加用户成功！");
     }
+
+
 }
