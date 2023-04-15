@@ -8,6 +8,7 @@ import com.lwz.hospitalsystem.entity.User;
 import com.lwz.hospitalsystem.service.TokenService;
 import com.lwz.hospitalsystem.service.UserService;
 import com.lwz.hospitalsystem.utils.LoginToken;
+import com.lwz.hospitalsystem.utils.SMSUtils;
 import com.lwz.hospitalsystem.utils.ValidateCodeUtils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -80,7 +81,8 @@ public class UserController {
             String code = ValidateCodeUtils.generateValidateCode(4).toString();
             log.info("code：{}", code);
             //调用阿里云提供的短信API发送短信
-//            SMSUtils.sendMessage("瑞吉外卖", "SMS_271625052", phone, code);
+            SMSUtils.sendMessage("瑞吉外卖", "\n" +
+                    "SMS_271625052", phone, code);
             //需要将生成的验证码保存到Session
             session.setAttribute(phone, code);
             return R.success("手机验证码发送成功！");
