@@ -87,7 +87,6 @@ public class UserController {
             session.setAttribute(phone, code);
             return R.success("手机验证码发送成功！");
         }
-
         return R.error("手机验证码发送失败！");
     }
 

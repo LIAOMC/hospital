@@ -6,7 +6,6 @@ import com.lwz.hospitalsystem.common.R;
 import com.lwz.hospitalsystem.dto.DoctorDto;
 import com.lwz.hospitalsystem.entity.Doctor;
 import com.lwz.hospitalsystem.entity.Office;
-import com.lwz.hospitalsystem.entity.Patient;
 import com.lwz.hospitalsystem.service.DoctorService;
 import com.lwz.hospitalsystem.service.OfficeService;
 import com.lwz.hospitalsystem.utils.LoginToken;

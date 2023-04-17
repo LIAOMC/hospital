@@ -17,6 +17,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -74,6 +75,9 @@ public class OperationController {
         updateWrapper.eq(OperationRoom::getRoomid,operation.getOroomid());
         operationRoomService.update(updateWrapper);
         operation.setDatetime(LocalDateTime.now());
+        Patient patient = patientService.getById(operation.getPatientid());
+        BigDecimal allPrice=operation.getPrice().add(patient.getMoney());
+        operation.setPrice(allPrice);
         operationService.save(operation);
         return R.success("添加手术信息成功！");
     }
