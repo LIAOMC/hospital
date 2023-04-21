@@ -10,9 +10,9 @@ import com.lwz.hospitalsystem.service.UserService;
 import com.lwz.hospitalsystem.utils.LoginToken;
 import com.lwz.hospitalsystem.utils.SMSUtils;
 import com.lwz.hospitalsystem.utils.ValidateCodeUtils;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @Slf4j
@@ -30,6 +31,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private TokenService tokenService;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @PostMapping("/login")
     public R<Object> login(@RequestBody Map map){
@@ -84,7 +87,8 @@ public class UserController {
             SMSUtils.sendMessage("瑞吉外卖", "\n" +
                     "SMS_271625052", phone, code);
             //需要将生成的验证码保存到Session
-            session.setAttribute(phone, code);
+//            session.setAttribute(phone, code);
+            redisTemplate.opsForValue().set(phone,code,5, TimeUnit.SECONDS);//设置验证码有效为5分钟
             return R.success("手机验证码发送成功！");
         }
         return R.error("手机验证码发送失败！");
