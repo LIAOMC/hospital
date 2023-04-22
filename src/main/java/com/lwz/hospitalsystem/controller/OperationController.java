@@ -77,7 +77,11 @@ public class OperationController {
         operation.setDatetime(LocalDateTime.now());
         Patient patient = patientService.getById(operation.getPatientid());
         BigDecimal allPrice=operation.getPrice().add(patient.getMoney());
-        operation.setPrice(allPrice);           //
+        LambdaUpdateWrapper<Patient> updateWrapper1=new LambdaUpdateWrapper<>();
+        updateWrapper1.set(Patient::getMoney,allPrice);
+        updateWrapper1.eq(Patient::getId,operation.getPatientid());
+        patientService.update(updateWrapper1);
+        operation.setPrice(allPrice);
         operationService.save(operation);
         return R.success("添加手术信息成功！");
     }
