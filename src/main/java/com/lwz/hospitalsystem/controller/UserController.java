@@ -41,7 +41,7 @@ public class UserController {
         JSONObject jsonObject=new JSONObject();
         LambdaQueryWrapper<User> queryWrapper=new LambdaQueryWrapper<>();
         queryWrapper.eq(User::getAccount,account);
-        queryWrapper.eq(User::getPassword,password);
+        queryWrapper.eq(User::getPassword,Md5Password.getMd5Password(password));
         User user = userService.getOne(queryWrapper);
         if(user==null){
             jsonObject.put("message","登录失败！");
@@ -105,10 +105,10 @@ public class UserController {
             return R.error("验证码错误！");
         }
         LambdaQueryWrapper<User> queryWrapper=new LambdaQueryWrapper<>();
-        User user = userService.getOne(queryWrapper);
         queryWrapper.eq(User::getPhone,phone);
-        if(Objects.equals(user.getPassword(), oldPassword)){
-            user.setPassword(newPassword);
+        User user = userService.getOne(queryWrapper);
+        if(Objects.equals(user.getPassword(), Md5Password.getMd5Password(oldPassword))){
+            user.setPassword(Md5Password.getMd5Password(newPassword));
             userService.update(user,queryWrapper);
             return R.success("修改密码成功！");
         }else {
