@@ -100,6 +100,10 @@ public class UserController {
         String phone=(String)map.get("phone");
         String oldPassword = (String) map.get("oldPassword");
         String newPassword = (String) map.get("newPassword");
+        String code =(String) map.get("code");
+        if(code!=redisTemplate.opsForValue().get(phone)){
+            return R.error("验证码错误！");
+        }
         LambdaQueryWrapper<User> queryWrapper=new LambdaQueryWrapper<>();
         User user = userService.getOne(queryWrapper);
         queryWrapper.eq(User::getPhone,phone);
@@ -133,6 +137,4 @@ public class UserController {
         userService.save(user);
         return R.success("添加用户成功！");
     }
-
-
 }
