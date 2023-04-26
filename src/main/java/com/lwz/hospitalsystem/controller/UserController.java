@@ -8,6 +8,7 @@ import com.lwz.hospitalsystem.entity.User;
 import com.lwz.hospitalsystem.service.TokenService;
 import com.lwz.hospitalsystem.service.UserService;
 import com.lwz.hospitalsystem.utils.LoginToken;
+import com.lwz.hospitalsystem.utils.Md5Password;
 import com.lwz.hospitalsystem.utils.SMSUtils;
 import com.lwz.hospitalsystem.utils.ValidateCodeUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +17,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +76,7 @@ public class UserController {
     }
 
     @PostMapping("/sendMsg")
-    public R<String> sendMsg(@RequestBody User user, HttpSession session) {
+    public R<String> sendMsg(@RequestBody User user) {
         //获取手机号
         String phone = user.getPhone();
         if (!StringUtils.isEmpty(phone)) {
@@ -101,8 +101,8 @@ public class UserController {
         String oldPassword = (String) map.get("oldPassword");
         String newPassword = (String) map.get("newPassword");
         LambdaQueryWrapper<User> queryWrapper=new LambdaQueryWrapper<>();
-        queryWrapper.eq(User::getPhone,phone);
         User user = userService.getOne(queryWrapper);
+        queryWrapper.eq(User::getPhone,phone);
         if(Objects.equals(user.getPassword(), oldPassword)){
             user.setPassword(newPassword);
             userService.update(user,queryWrapper);
@@ -122,7 +122,14 @@ public class UserController {
     @PostMapping("/add")
     @LoginToken
     public R<String> addUser(@RequestBody User user){
+        LambdaQueryWrapper<User> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.eq(User::getName,user.getName());
+        User one = userService.getOne(queryWrapper);
+        if(one!=null){
+            return R.error("用户名已存在！");
+        }
         user.setTime(LocalDateTime.now());
+        user.setPassword(Md5Password.getMd5Password(user.getPassword()));
         userService.save(user);
         return R.success("添加用户成功！");
     }
